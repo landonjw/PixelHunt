@@ -110,13 +110,38 @@ public interface Hunt {
         /**
          * Generates a hunt with a random species, random natures, duration from configuration and random rewards.
          *
-         * @param excludedSpecies species to exclude from choice
          * @return hunt with a random species, random natures, duration from configuration and random rewards
          */
-        Hunt randomHunt(EnumSpecies... excludedSpecies);
+        Hunt randomHunt();
+
+        /**
+         * Generates a hunt with a random species, random natures, duration from configuration and random rewards.
+         * Selects random species from the list supplied.
+         *
+         * @param species species to select from
+         * @return hunt with a random species, random natures, duration from configuration and random rewards
+         * @throws IllegalArgumentException if a species is null
+         */
+        Hunt randomHuntFrom(EnumSpecies... species);
+
+        /**
+         * Generates a hunt with a random species, random natures, duration from configuration and random rewards.
+         * Selects a random species, excluding species from the list supplied.
+         *
+         * @param species species to select from
+         * @return hunt with a random species, random natures, duration from configuration and random rewards
+         * @throws IllegalArgumentException if a species is null
+         */
+        Hunt randomHuntExcluding(EnumSpecies... species);
 
         /**
          * Builds a new hunt from the properties in the builder.
+         *
+         * <p>If no natures are specified up to this point, 4 random
+         * unique natures will be selected and applied to the hunt.</p>
+         *
+         * <p>If no rewards are specified up to this point, they will
+         * be randomly selected and applied to the hunt.</p>
          *
          * @return a new hunt with the properties in the builder
          * @throws IllegalStateException if no species is set

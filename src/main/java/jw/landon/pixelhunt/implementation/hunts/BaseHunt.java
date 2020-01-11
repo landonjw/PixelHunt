@@ -10,6 +10,7 @@ import scala.actors.threadpool.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -153,8 +154,22 @@ public class BaseHunt implements Hunt {
 
         /** {@inheritDoc} */
         @Override
-        public BaseHunt randomHunt(EnumSpecies... excludedSpecies){
-            List<EnumSpecies> excludedSpeciesList = Arrays.asList(excludedSpecies);
+        public Hunt randomHunt() {
+            this.species = EnumSpecies.randomPoke();
+            return build();
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public Hunt randomHuntFrom(EnumSpecies... species) {
+            this.species = species[new Random().nextInt(species.length)];
+            return build();
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public Hunt randomHuntExcluding(EnumSpecies... species) {
+            List<EnumSpecies> excludedSpeciesList = (species == null) ? new ArrayList<>() :  Arrays.asList(species);
             EnumSpecies randomSpecies;
 
             if(!excludedSpeciesList.isEmpty()){
@@ -173,7 +188,7 @@ public class BaseHunt implements Hunt {
 
         /** {@inheritDoc} */
         @Override
-        public BaseHunt build(){
+        public Hunt build(){
             if(species == null){
                 throw new IllegalStateException("species must be set");
             }
@@ -189,7 +204,9 @@ public class BaseHunt implements Hunt {
                 }
             }
 
-            return new BaseHunt(species, natures, rewards, duration);
+            List<EnumNature> naturesCopy = new ArrayList<>(natures);
+            List<Reward> rewardsCopy = new ArrayList<>(rewards);
+            return new BaseHunt(species, naturesCopy, rewardsCopy, duration);
         }
 
         /**
